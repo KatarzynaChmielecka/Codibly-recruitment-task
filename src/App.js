@@ -29,24 +29,25 @@ function App() {
   return (
     <div className="App">
       {isPending && <h1>Loading...</h1>}
-
-      <table>
-        <tr>
-          <th>ID</th>
-          <th>NAME</th>
-          <th>YEAR</th>
-        </tr>
-        {productsData &&
-          productsData.data.map((index) => (
-            <>
-              <tr style={{ backgroundColor: index.color }}>
-                <td>{index.id}</td>
-                <td>{index.name}</td>
-                <td>{index.year}</td>
-              </tr>
-            </>
-          ))}
-      </table>
+      {!isPending && (
+        <table>
+          <tr>
+            <th>ID</th>
+            <th>NAME</th>
+            <th>YEAR</th>
+          </tr>
+          {productsData &&
+            productsData.data.map((index) => (
+              <>
+                <tr style={{ backgroundColor: index.color }}>
+                  <td>{index.id}</td>
+                  <td>{index.name}</td>
+                  <td>{index.year}</td>
+                </tr>
+              </>
+            ))}
+        </table>
+      )}
     </div>
   );
 }
