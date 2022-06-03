@@ -1,23 +1,52 @@
-import logo from './logo.svg';
 import './App.css';
 
+import { useEffect, useState } from 'react';
+
 function App() {
+  const [isPending, setIsPending] = useState(true);
+  const [productsData, setProductsData] = useState(null);
+  useEffect(() => {
+    async function fetchSeriesData() {
+      try {
+        const series = await fetch('https://reqres.in/api/products', {
+          method: 'GET',
+          redirect: 'follow',
+        });
+        const resJson = await series.json();
+        if (series.status === 200) {
+          setProductsData(resJson);
+          setIsPending(false);
+          console.log(resJson);
+        } else {
+          alert('bu');
+        }
+      } catch (error) {
+        alert('buuuu');
+      }
+    }
+    fetchSeriesData();
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {isPending && <h1>Loading...</h1>}
+
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>NAME</th>
+          <th>YEAR</th>
+        </tr>
+        {productsData &&
+          productsData.data.map((index) => (
+            <>
+              <tr style={{ backgroundColor: index.color }}>
+                <td>{index.id}</td>
+                <td>{index.name}</td>
+                <td>{index.year}</td>
+              </tr>
+            </>
+          ))}
+      </table>
     </div>
   );
 }
