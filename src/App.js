@@ -17,10 +17,16 @@ const SearchBar = ({ value, onChange }) => {
     <div className="col-md-4">
       <input
         type="search"
+        pattern="[0-9]*"
         value={value}
         className="form-control form-control-lg"
         placeholder="Search..."
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) =>
+          onChange(
+            // e.target.value
+            e.target.validity.valid ? e.target.value : '',
+          )
+        }
       />
     </div>
   );
@@ -74,9 +80,7 @@ function App() {
 
   let searchResult;
   if (searchQuery) {
-    searchResult = productsData.filter((post) =>
-      post.name.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
+    searchResult = productsData.filter((post) => post.id == searchQuery);
   }
   return (
     <div
