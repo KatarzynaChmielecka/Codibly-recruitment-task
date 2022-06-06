@@ -11,12 +11,32 @@ import TableRow from '@mui/material/TableRow';
 import { useEffect, useState } from 'react';
 
 // import Box from '@mui/material/Box';
-
+// eslint-disable-next-line react/prop-types
+const SearchBar = ({ value, onChange }) => {
+  return (
+    <div className="col-md-4">
+      <input
+        type="search"
+        value={value}
+        className="form-control form-control-lg"
+        placeholder="Search..."
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </div>
+  );
+};
 function App() {
   const [isPending, setIsPending] = useState(true);
   const [productsData, setProductsData] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [searchQuery, setSearchQuery] = useState('');
+  // const [disabled, setDisabled] = useState(true);
+  const searchChangeHandler = (query) => {
+    setSearchQuery(query);
+  };
+
+  let rowsPerPage = 5;
+  let disabled = true;
   useEffect(() => {
     async function fetchSeriesData() {
       try {
@@ -47,10 +67,17 @@ function App() {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+  // const handleChangeRowsPerPage = (event) => {
+  //   setRowsPerPage(parseInt(event.target.value, 10));
+  //   setPage(0);
+  // };
+
+  let searchResult;
+  if (searchQuery) {
+    searchResult = productsData.filter((post) =>
+      post.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
+  }
   return (
     <div
       className="App"
@@ -62,7 +89,8 @@ function App() {
       }}
     >
       {isPending && <h1>Loading...</h1>}
-
+      <SearchBar value={searchQuery} onChange={searchChangeHandler} />
+      {searchQuery ? searchResult.length : productsData.length}
       {!isPending && (
         <TableContainer component={Paper} style={{ maxWidth: '500px' }}>
           <Table
@@ -70,14 +98,18 @@ function App() {
             aria-label="custom pagination table"
           >
             <TableBody style={{ backgroundColor: 'yellow' }}>
-              {(rowsPerPage > 0
+              {(rowsPerPage && !searchQuery
                 ? productsData.slice(
                     page * rowsPerPage,
                     page * rowsPerPage + rowsPerPage,
                   )
-                : productsData
+                : searchResult
               ).map((row) => (
-                <TableRow key={row.id} sx={{ backgroundColor: row.color }}>
+                <TableRow
+                  key={row.id}
+                  sx={{ backgroundColor: row.color }}
+                  // searchQuery={searchQuery}
+                >
                   <TableCell
                     component="th"
                     scope="column"
@@ -94,7 +126,7 @@ function App() {
                 </TableRow>
               ))}
 
-              {emptyRows > 0 && (
+              {emptyRows > 0 && !searchResult && (
                 <TableRow style={{ height: 53 * emptyRows }}>
                   <TableCell colSpan={6} />
                 </TableRow>
@@ -103,28 +135,40 @@ function App() {
             <TableFooter>
               <TableRow>
                 <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
+                  rowsPerPageOptions={[]}
                   count={productsData.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
+                  // disabled
                   SelectProps={{
                     inputProps: {
                       'aria-label': 'rows per page',
                     },
+                    // disabled: disabled,
                   }}
                   onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  // onRowsPerPageChange={handleChangeRowsPerPage}
                   //ActionsComponent={TablePaginationActions}
                   //component={Box}
                   labelDisplayedRows={({ page }) => {
                     return `Page: ${page}`;
                   }}
-                  backIconButtonProps={{
-                    color: 'secondary',
-                  }}
-                  nextIconButtonProps={{ color: 'secondary' }}
-                  showFirstButton={true}
-                  showLastButton={true}
+                  backIconButtonProps={
+                    productsData && searchQuery
+                      ? {
+                          disabled: disabled,
+                        }
+                      : undefined
+                  }
+                  nextIconButtonProps={
+                    productsData && searchQuery
+                      ? {
+                          disabled: disabled,
+                        }
+                      : undefined
+                  }
+                  showFirstButton={productsData && !searchQuery ? true : false}
+                  showLastButton={productsData && !searchQuery ? true : false}
                   labelRowsPerPage={<span>Rows:</span>}
                   sx={{
                     '.MuiTablePagination-toolbar': {
@@ -133,8 +177,10 @@ function App() {
                     '.MuiTablePagination-selectLabel, .MuiTablePagination-input':
                       {
                         fontWeight: 'bold',
-                        color: 'blue',
+                        color: 'yellow',
+                        display: 'none',
                       },
+                    '.MuiSelect-icon': { display: 'none' },
                   }}
                 />
               </TableRow>
