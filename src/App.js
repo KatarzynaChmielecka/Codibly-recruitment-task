@@ -8,6 +8,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import { TableHead } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 // import Box from '@mui/material/Box';
@@ -64,12 +65,33 @@ function App() {
       {isPending && <h1>Loading...</h1>}
 
       {!isPending && (
-        <TableContainer component={Paper} style={{ maxWidth: '500px' }}>
+        <TableContainer
+          component={Paper}
+          style={{ maxWidth: '31.25rem', maxHeight: '25rem' }}
+        >
+          <caption
+            style={{
+              width: '100%',
+              backgroundColor: 'wheat',
+              maxWidth: '100%',
+              display: 'inline-block',
+            }}
+          >
+            Table with products list.
+          </caption>
           <Table
             style={{ width: 'maxContent' }}
             aria-label="custom pagination table"
+            align="center"
           >
-            <TableBody style={{ backgroundColor: 'yellow' }}>
+            <TableHead sx={{ backgroundColor: '#64646480' }}>
+              <TableRow>
+                <TableCell align="center">ID</TableCell>
+                <TableCell align="center">NAME</TableCell>
+                <TableCell align="center">YEAR</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody style={{ backgroundColor: 'wheat' }}>
               {(rowsPerPage > 0
                 ? productsData.slice(
                     page * rowsPerPage,
@@ -81,11 +103,15 @@ function App() {
                   <TableCell
                     component="th"
                     scope="column"
+                    align="center"
                     style={{ width: 'maxContent' }}
                   >
                     {row.id}
                   </TableCell>
-                  <TableCell style={{ width: 'maxContent' }} align="center">
+                  <TableCell
+                    style={{ width: 'maxContent', borderCollapse: 'collapse' }}
+                    align="center"
+                  >
                     {row.name}
                   </TableCell>
                   <TableCell style={{ width: 'maxContent' }} align="center">
@@ -128,7 +154,7 @@ function App() {
                   labelRowsPerPage={<span>Rows:</span>}
                   sx={{
                     '.MuiTablePagination-toolbar': {
-                      backgroundColor: 'rgba(100,100,100,0.5)',
+                      backgroundColor: '#64646480',
                     },
                     '.MuiTablePagination-selectLabel, .MuiTablePagination-input':
                       {
