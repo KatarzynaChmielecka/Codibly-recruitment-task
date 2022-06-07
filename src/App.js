@@ -8,6 +8,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import { TableHead } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 // import Box from '@mui/material/Box';
@@ -96,101 +97,124 @@ function App() {
       <SearchBar value={searchQuery} onChange={searchChangeHandler} />
       {searchQuery ? searchResult.length : productsData.length}
       {!isPending && (
-        <TableContainer component={Paper} style={{ maxWidth: '500px' }}>
-          <Table
-            style={{ width: 'maxContent' }}
-            aria-label="custom pagination table"
+        <>
+          <TableContainer
+            component={Paper}
+            style={{ maxWidth: '31.25rem', maxHeight: '25rem' }}
           >
-            <TableBody style={{ backgroundColor: 'yellow' }}>
-              {(rowsPerPage && !searchQuery
-                ? productsData.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage,
-                  )
-                : searchResult
-              ).map((row) => (
-                <TableRow
-                  key={row.id}
-                  sx={{ backgroundColor: row.color }}
-                  // searchQuery={searchQuery}
-                >
-                  <TableCell
-                    component="th"
-                    scope="column"
-                    style={{ width: 'maxContent' }}
+            <Table
+              style={{ width: 'maxContent' }}
+              aria-label="custom pagination table"
+              align="center"
+            >
+              <TableHead sx={{ backgroundColor: '#64646480' }}>
+                <TableRow>
+                  <TableCell align="center">ID</TableCell>
+                  <TableCell align="center">NAME</TableCell>
+                  <TableCell align="center">YEAR</TableCell>
+                </TableRow>
+              </TableHead>
+              {/* <TableBody style={{ backgroundColor: 'yellow' }}>
+              {(rowsPerPage && !searchQuery */}
+              <TableBody style={{ backgroundColor: 'wheat' }}>
+                {(rowsPerPage && !searchQuery
+                  ? productsData.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage,
+                    )
+                  : searchResult
+                ).map((row) => (
+                  <TableRow
+                    key={row.id}
+                    sx={{ backgroundColor: row.color }}
+                    // searchQuery={searchQuery}
                   >
-                    {row.id}
-                  </TableCell>
-                  <TableCell style={{ width: 'maxContent' }} align="center">
-                    {row.name}
-                  </TableCell>
-                  <TableCell style={{ width: 'maxContent' }} align="center">
-                    {row.year}
-                  </TableCell>
-                </TableRow>
-              ))}
-
-              {emptyRows > 0 && !searchResult && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={[]}
-                  count={productsData.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  // disabled
-                  SelectProps={{
-                    inputProps: {
-                      'aria-label': 'rows per page',
-                    },
-                    // disabled: disabled,
-                  }}
-                  onPageChange={handleChangePage}
-                  // onRowsPerPageChange={handleChangeRowsPerPage}
-                  //ActionsComponent={TablePaginationActions}
-                  //component={Box}
-                  labelDisplayedRows={({ page }) => {
-                    return `Page: ${page}`;
-                  }}
-                  backIconButtonProps={
-                    productsData && searchQuery
-                      ? {
-                          disabled: disabled,
-                        }
-                      : undefined
-                  }
-                  nextIconButtonProps={
-                    productsData && searchQuery
-                      ? {
-                          disabled: disabled,
-                        }
-                      : undefined
-                  }
-                  showFirstButton={productsData && !searchQuery ? true : false}
-                  showLastButton={productsData && !searchQuery ? true : false}
-                  labelRowsPerPage={<span>Rows:</span>}
-                  sx={{
-                    '.MuiTablePagination-toolbar': {
-                      backgroundColor: 'rgba(100,100,100,0.5)',
-                    },
-                    '.MuiTablePagination-selectLabel, .MuiTablePagination-input':
-                      {
-                        fontWeight: 'bold',
-                        color: 'yellow',
-                        display: 'none',
+                    <TableCell
+                      component="th"
+                      scope="column"
+                      align="center"
+                      style={{ width: 'maxContent' }}
+                    >
+                      {row.id}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        width: 'maxContent',
+                        borderCollapse: 'collapse',
+                      }}
+                      align="center"
+                    >
+                      {row.name}
+                    </TableCell>
+                    <TableCell style={{ width: 'maxContent' }} align="center">
+                      {row.year}
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {emptyRows > 0 && !searchResult && (
+                  <TableRow style={{ height: 53 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    rowsPerPageOptions={[]}
+                    count={productsData.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    // disabled
+                    SelectProps={{
+                      inputProps: {
+                        'aria-label': 'rows per page',
                       },
-                    '.MuiSelect-icon': { display: 'none' },
-                  }}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </TableContainer>
+                      // disabled: disabled,
+                    }}
+                    onPageChange={handleChangePage}
+                    // onRowsPerPageChange={handleChangeRowsPerPage}
+                    //ActionsComponent={TablePaginationActions}
+                    //component={Box}
+                    labelDisplayedRows={({ page }) => {
+                      return `Page: ${page}`;
+                    }}
+                    backIconButtonProps={
+                      productsData && searchQuery
+                        ? {
+                            disabled: disabled,
+                          }
+                        : undefined
+                    }
+                    nextIconButtonProps={
+                      productsData && searchQuery
+                        ? {
+                            disabled: disabled,
+                          }
+                        : undefined
+                    }
+                    showFirstButton={
+                      productsData && !searchQuery ? true : false
+                    }
+                    showLastButton={productsData && !searchQuery ? true : false}
+                    labelRowsPerPage={<span>Rows:</span>}
+                    sx={{
+                      '.MuiTablePagination-toolbar': {
+                        backgroundColor: '#64646480',
+                      },
+                      '.MuiTablePagination-selectLabel, .MuiTablePagination-input':
+                        {
+                          fontWeight: 'bold',
+                          color: 'yellow',
+                          display: 'none',
+                        },
+                      '.MuiSelect-icon': { display: 'none' },
+                    }}
+                  />
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </TableContainer>
+        </>
       )}
     </div>
   );
