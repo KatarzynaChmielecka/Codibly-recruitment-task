@@ -8,28 +8,26 @@ import TableContainer from '@mui/material/TableContainer';
 import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { TableHead } from '@mui/material';
+import { TableHead, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 // import Box from '@mui/material/Box';
 // eslint-disable-next-line react/prop-types
 const SearchBar = ({ value, onChange }) => {
   return (
-    <div className="col-md-4">
-      <input
-        type="search"
-        pattern="[0-9]*"
-        value={value}
-        className="form-control form-control-lg"
-        placeholder="Search..."
-        onChange={(e) =>
-          onChange(
-            // e.target.value
-            e.target.validity.valid ? e.target.value : '',
-          )
-        }
-      />
-    </div>
+    <TextField
+      type="search"
+      inputProps={{ pattern: '[0-9]*' }}
+      value={value}
+      className="form-control form-control-lg"
+      placeholder="Search..."
+      onChange={(e) =>
+        onChange(
+          // e.target.value
+          e.target.validity.valid ? e.target.value : '',
+        )
+      }
+    />
   );
 };
 function App() {
