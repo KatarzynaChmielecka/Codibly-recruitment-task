@@ -1,5 +1,6 @@
 import './App.css';
 
+import LinearProgress from '@mui/material/LinearProgress';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -8,25 +9,48 @@ import TableContainer from '@mui/material/TableContainer';
 import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { TableHead } from '@mui/material';
+import { TableHead, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-// import Box from '@mui/material/Box';
-
+// eslint-disable-next-line react/prop-types
+const SearchBar = ({ value, onChange }) => {
+  return (
+    <TextField
+      type="search"
+      inputProps={{ pattern: '[0-9]*' }}
+      value={value}
+      className="form-control form-control-lg"
+      placeholder="Search..."
+      onChange={(e) =>
+        onChange(
+          // e.target.value
+          e.target.validity.valid ? e.target.value : '',
+        )
+      }
+    />
+  );
+};
 function App() {
   const [isPending, setIsPending] = useState(true);
   const [productsData, setProductsData] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [searchQuery, setSearchQuery] = useState('');
+  // const [disabled, setDisabled] = useState(true);
+  const searchChangeHandler = (query) => {
+    setSearchQuery(query);
+  };
+
+  let rowsPerPage = 5;
+  let disabled = true;
   useEffect(() => {
     async function fetchSeriesData() {
       try {
-        const series = await fetch('https://reqres.in/api/products', {
+        const products = await fetch('https://reqres.in/api/products', {
           method: 'GET',
           redirect: 'follow',
         });
-        const resJson = await series.json();
-        if (series.status === 200) {
+        const resJson = await products.json();
+        if (products.status === 200) {
           setProductsData(resJson.data);
           setIsPending(false);
           console.log(resJson);
@@ -48,125 +72,158 @@ function App() {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+  // const handleChangeRowsPerPage = (event) => {
+  //   setRowsPerPage(parseInt(event.target.value, 10));
+  //   setPage(0);
+  // };
+
+  let searchResult;
+  if (searchQuery) {
+    searchResult = productsData.filter((post) => post.id == searchQuery);
+  }
   return (
     <div
       className="App"
       style={{
         display: 'flex',
         justifyContent: 'center',
+        flexDirection: 'column',
         height: '100vh',
         alignItems: 'center',
       }}
     >
-      {isPending && <h1>Loading...</h1>}
+      {isPending && <LinearProgress sx={{ width: '50%', color: 'grey.500' }} />}
 
       {!isPending && (
-        <TableContainer
-          component={Paper}
-          style={{ maxWidth: '31.25rem', maxHeight: '25rem' }}
-        >
-          <caption
-            style={{
-              width: '100%',
-              backgroundColor: 'wheat',
-              maxWidth: '100%',
-              display: 'inline-block',
-            }}
+        <>
+          <SearchBar value={searchQuery} onChange={searchChangeHandler} />
+          <TableContainer
+            component={Paper}
+            style={{ maxWidth: '31.25rem', maxHeight: '25rem' }}
           >
-            Table with products list.
-          </caption>
-          <Table
-            style={{ width: 'maxContent' }}
-            aria-label="custom pagination table"
-            align="center"
-          >
-            <TableHead sx={{ backgroundColor: '#64646480' }}>
-              <TableRow>
-                <TableCell align="center">ID</TableCell>
-                <TableCell align="center">NAME</TableCell>
-                <TableCell align="center">YEAR</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody style={{ backgroundColor: 'wheat' }}>
-              {(rowsPerPage > 0
-                ? productsData.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage,
-                  )
-                : productsData
-              ).map((row) => (
-                <TableRow key={row.id} sx={{ backgroundColor: row.color }}>
-                  <TableCell
-                    component="th"
-                    scope="column"
-                    align="center"
-                    style={{ width: 'maxContent' }}
-                  >
-                    {row.id}
-                  </TableCell>
-                  <TableCell
-                    style={{ width: 'maxContent', borderCollapse: 'collapse' }}
-                    align="center"
-                  >
-                    {row.name}
-                  </TableCell>
-                  <TableCell style={{ width: 'maxContent' }} align="center">
-                    {row.year}
-                  </TableCell>
+            <Table
+              style={{ width: 'maxContent' }}
+              aria-label="custom pagination table"
+              align="center"
+            >
+              <TableHead sx={{ backgroundColor: '#64646480' }}>
+                <TableRow>
+                  <TableCell align="center">ID</TableCell>
+                  <TableCell align="center">NAME</TableCell>
+                  <TableCell align="center">YEAR</TableCell>
                 </TableRow>
-              ))}
+              </TableHead>
 
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  count={productsData.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  SelectProps={{
-                    inputProps: {
-                      'aria-label': 'rows per page',
-                    },
-                  }}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  //ActionsComponent={TablePaginationActions}
-                  //component={Box}
-                  labelDisplayedRows={({ page }) => {
-                    return `Page: ${page}`;
-                  }}
-                  backIconButtonProps={{
-                    color: 'secondary',
-                  }}
-                  nextIconButtonProps={{ color: 'secondary' }}
-                  showFirstButton={true}
-                  showLastButton={true}
-                  labelRowsPerPage={<span>Rows:</span>}
-                  sx={{
-                    '.MuiTablePagination-toolbar': {
-                      backgroundColor: '#64646480',
-                    },
-                    '.MuiTablePagination-selectLabel, .MuiTablePagination-input':
-                      {
-                        fontWeight: 'bold',
-                        color: 'blue',
+              <TableBody style={{ backgroundColor: 'wheat' }}>
+                {(rowsPerPage && !searchQuery
+                  ? productsData.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage,
+                    )
+                  : searchResult
+                ).map((row) => (
+                  <TableRow
+                    key={row.id}
+                    sx={{ backgroundColor: row.color }}
+                    // searchQuery={searchQuery}
+                  >
+                    <TableCell
+                      component="th"
+                      scope="column"
+                      align="center"
+                      style={{ width: 'maxContent' }}
+                    >
+                      {row.id}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        width: 'maxContent',
+                        borderCollapse: 'collapse',
+                      }}
+                      align="center"
+                    >
+                      {row.name}
+                    </TableCell>
+                    <TableCell style={{ width: 'maxContent' }} align="center">
+                      {row.year}
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {emptyRows > 0 && !searchResult && (
+                  <TableRow style={{ height: 53 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    rowsPerPageOptions={[]}
+                    count={productsData.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    // disabled
+                    SelectProps={{
+                      inputProps: {
+                        'aria-label': 'rows per page',
                       },
-                  }}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </TableContainer>
+                      // disabled: disabled,
+                    }}
+                    onPageChange={handleChangePage}
+                    // onRowsPerPageChange={handleChangeRowsPerPage}
+                    //ActionsComponent={TablePaginationActions}
+                    //component={Box}
+                    labelDisplayedRows={({ page }) => {
+                      return `Page: ${page}`;
+                    }}
+                    backIconButtonProps={
+                      productsData && searchQuery
+                        ? {
+                            disabled: disabled,
+                          }
+                        : undefined
+                    }
+                    nextIconButtonProps={
+                      productsData && searchQuery
+                        ? {
+                            disabled: disabled,
+                          }
+                        : undefined
+                    }
+                    showFirstButton={
+                      productsData && !searchQuery ? true : false
+                    }
+                    showLastButton={productsData && !searchQuery ? true : false}
+                    labelRowsPerPage={<span>Rows:</span>}
+                    sx={{
+                      '.MuiTablePagination-toolbar': {
+                        backgroundColor: '#64646480',
+                      },
+                      '.MuiTablePagination-selectLabel, .MuiTablePagination-input':
+                        {
+                          fontWeight: 'bold',
+                          color: 'yellow',
+                          display: 'none',
+                        },
+                      '.MuiSelect-icon': { display: 'none' },
+                    }}
+                  />
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </TableContainer>
+          {searchQuery ? (
+            searchResult.length === 0 ? (
+              'No data found'
+            ) : (
+              <>
+                <h1>Results:</h1> {searchResult.length}
+              </>
+            )
+          ) : (
+            ''
+          )}
+        </>
       )}
     </div>
   );
