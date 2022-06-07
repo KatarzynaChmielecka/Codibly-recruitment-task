@@ -89,13 +89,14 @@ function App() {
       style={{
         display: 'flex',
         justifyContent: 'center',
+        flexDirection: 'column',
         height: '100vh',
         alignItems: 'center',
       }}
     >
       {isPending && <h1>Loading...</h1>}
       <SearchBar value={searchQuery} onChange={searchChangeHandler} />
-      {searchQuery ? searchResult.length : productsData.length}
+
       {!isPending && (
         <>
           <TableContainer
@@ -214,6 +215,17 @@ function App() {
               </TableFooter>
             </Table>
           </TableContainer>
+          {searchQuery ? (
+            searchResult.length === 0 ? (
+              'No data found'
+            ) : (
+              <>
+                <h1>Results:</h1> {searchResult.length}
+              </>
+            )
+          ) : (
+            ''
+          )}
         </>
       )}
     </div>
