@@ -1,5 +1,6 @@
 import './App.css';
 
+import LinearProgress from '@mui/material/LinearProgress';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,7 +12,6 @@ import TableRow from '@mui/material/TableRow';
 import { TableHead, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-// import Box from '@mui/material/Box';
 // eslint-disable-next-line react/prop-types
 const SearchBar = ({ value, onChange }) => {
   return (
@@ -45,12 +45,12 @@ function App() {
   useEffect(() => {
     async function fetchSeriesData() {
       try {
-        const series = await fetch('https://reqres.in/api/products', {
+        const products = await fetch('https://reqres.in/api/products', {
           method: 'GET',
           redirect: 'follow',
         });
-        const resJson = await series.json();
-        if (series.status === 200) {
+        const resJson = await products.json();
+        if (products.status === 200) {
           setProductsData(resJson.data);
           setIsPending(false);
           console.log(resJson);
@@ -92,11 +92,11 @@ function App() {
         alignItems: 'center',
       }}
     >
-      {isPending && <h1>Loading...</h1>}
-      <SearchBar value={searchQuery} onChange={searchChangeHandler} />
+      {isPending && <LinearProgress sx={{ width: '50%', color: 'grey.500' }} />}
 
       {!isPending && (
         <>
+          <SearchBar value={searchQuery} onChange={searchChangeHandler} />
           <TableContainer
             component={Paper}
             style={{ maxWidth: '31.25rem', maxHeight: '25rem' }}
@@ -113,8 +113,7 @@ function App() {
                   <TableCell align="center">YEAR</TableCell>
                 </TableRow>
               </TableHead>
-              {/* <TableBody style={{ backgroundColor: 'yellow' }}>
-              {(rowsPerPage && !searchQuery */}
+
               <TableBody style={{ backgroundColor: 'wheat' }}>
                 {(rowsPerPage && !searchQuery
                   ? productsData.slice(
