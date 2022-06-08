@@ -11,6 +11,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { TableHead, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 // eslint-disable-next-line react/prop-types
 const SearchBar = ({ value, onChange }) => {
@@ -36,8 +37,11 @@ function App() {
   const [page, setPage] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   // const [disabled, setDisabled] = useState(true);
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const searchChangeHandler = (query) => {
     setSearchQuery(query);
+    setSearchParams({ query });
   };
 
   let rowsPerPage = 5;
@@ -67,9 +71,10 @@ function App() {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - productsData.length) : 0;
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (event, pageNumber) => {
     event.preventDefault();
-    setPage(newPage);
+    setPage(pageNumber);
+    setSearchParams({ pageNumber });
   };
 
   // const handleChangeRowsPerPage = (event) => {
