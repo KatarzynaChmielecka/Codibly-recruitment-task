@@ -47,12 +47,15 @@ function App() {
   let rowsPerPage = 5;
   let disabled = true;
   useEffect(() => {
-    async function fetchSeriesData() {
+    async function fetchProductsData() {
       try {
-        const products = await fetch('https://reqres.in/api/products', {
-          method: 'GET',
-          redirect: 'follow',
-        });
+        const products = await fetch(
+          'https://reqres.in/api/products?per_page=12',
+          {
+            method: 'GET',
+            redirect: 'follow',
+          },
+        );
         const resJson = await products.json();
         if (products.status === 200) {
           setProductsData(resJson.data);
@@ -65,7 +68,7 @@ function App() {
         alert('buuuu');
       }
     }
-    fetchSeriesData();
+    fetchProductsData();
   }, []);
 
   const emptyRows =
@@ -223,6 +226,7 @@ function App() {
             ) : (
               <>
                 <h1>Results:</h1> {searchResult.length}
+                <h2>{searchParams.get('query')}</h2>
               </>
             )
           ) : (
