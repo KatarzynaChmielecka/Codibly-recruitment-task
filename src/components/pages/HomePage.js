@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import { Link, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -10,7 +11,6 @@ const HomePage = () => {
   const [page, setPage] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
-
   let rowsPerPage = 5;
   let disabled = true;
 
@@ -23,7 +23,7 @@ const HomePage = () => {
     async function fetchProductsData() {
       try {
         const products = await fetch(
-          'https://reqres.in/api/products?per_page=12?page=1',
+          'https://reqres.in/api/products?per_page=12',
           {
             method: 'GET',
             redirect: 'follow',
@@ -33,12 +33,15 @@ const HomePage = () => {
         if (products.status === 200) {
           setProductsData(resJson.data);
           setIsPending(false);
-          console.log(resJson);
+
+          toast.success('You can check ours products. Everything is ok 😀');
         } else {
-          alert('bu');
+          toast.error(
+            "We couldn't fetch products data. Please try again later. 😒",
+          );
         }
       } catch (error) {
-        alert('buuuu');
+        toast.error('Something went wrong. Please try again later. 😒');
       }
     }
     fetchProductsData();
@@ -55,7 +58,7 @@ const HomePage = () => {
 
   let searchResult;
   if (searchQuery) {
-    searchResult = productsData.filter((post) => post.id == searchQuery);
+    searchResult = productsData.filter((product) => product.id == searchQuery);
   }
 
   return (
