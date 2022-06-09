@@ -11,7 +11,7 @@ const SearchBar = ({ value, onChange }) => {
       className="form-control form-control-lg"
       placeholder="Only numbers allowed"
       onChange={(e) => onChange(e.target.validity.valid ? e.target.value : '')}
-      sx={{ marginBottom: '3.3125rem' }}
+      sx={{ marginBottom: '3.3125rem', width: '100%' }}
     />
   );
 };
