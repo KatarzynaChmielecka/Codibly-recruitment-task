@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+
 import LinearProgress from '@mui/material/LinearProgress';
 import Paper from '@mui/material/Paper';
 import PropTypes from 'prop-types';
