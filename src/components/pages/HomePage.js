@@ -8,6 +8,7 @@ import TableProducts from '../organisms/TableProducts/TableProducts';
 const HomePage = () => {
   const [isPending, setIsPending] = useState(true);
   const [productsData, setProductsData] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [page, setPage] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
@@ -85,7 +86,7 @@ const HomePage = () => {
           <>
             <TableProducts
               productsData={productsData}
-              page={page}
+              page={pageNumberParams}
               rowsPerPage={rowsPerPage}
               searchQuery={searchQuery}
               isPending={isPending}
