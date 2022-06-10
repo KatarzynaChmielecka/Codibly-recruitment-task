@@ -73,6 +73,7 @@ const HomePage = () => {
 
   return (
     <main>
+      <p>Hello Stranger!</p>
       {searchQuery ? (
         searchResult.length === 0 ? (
           <>
