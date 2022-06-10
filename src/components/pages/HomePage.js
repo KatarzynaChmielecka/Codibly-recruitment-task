@@ -1,7 +1,7 @@
 import toast from 'react-hot-toast';
 import { Link, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import TableProducts from '../organisms/TableProducts/TableProducts';
 
@@ -11,14 +11,11 @@ const HomePage = () => {
   const [page, setPage] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   let rowsPerPage = 5;
   let disabled = true;
-
-  const searchChangeHandler = (query) => {
-    setSearchQuery(query);
-    setSearchParams({ query }, { replace: true });
-  };
-
+  let params = new URLSearchParams(document.location.search);
+  let pageNumberParams = parseInt(params.get('pageNumber'));
   useEffect(() => {
     async function fetchProductsData() {
       try {
@@ -33,7 +30,12 @@ const HomePage = () => {
         if (products.status === 200) {
           setProductsData(resJson.data);
           setIsPending(false);
-
+          if (!pageNumberParams) {
+            navigate({
+              pathname: '/',
+              search: '?pageNumber=0',
+            });
+          }
           toast.success('You can check ours products. Everything is ok 😀');
         } else {
           toast.error(
@@ -47,12 +49,20 @@ const HomePage = () => {
     fetchProductsData();
   }, []);
 
+  const searchChangeHandler = (query) => {
+    setSearchQuery(query);
+    setSearchParams({ query }, { replace: true });
+  };
+
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - productsData.length) : 0;
+    pageNumberParams >= 0
+      ? Math.max(0, (1 + pageNumberParams) * rowsPerPage - productsData.length)
+      : 0;
 
   const handleChangePage = (event, pageNumber) => {
     event.preventDefault();
-    setPage(pageNumber);
+
+    setPage(pageNumberParams);
     setSearchParams({ pageNumber }, { replace: true });
   };
 
@@ -101,7 +111,7 @@ const HomePage = () => {
       ) : (
         <TableProducts
           productsData={productsData}
-          page={page}
+          page={pageNumberParams}
           rowsPerPage={rowsPerPage}
           searchQuery={searchQuery}
           isPending={isPending}
