@@ -16,7 +16,7 @@ export interface ProductsDataInterface {
 const HomePage = () => {
   const [isPending, setIsPending] = useState(true);
   const [productsData, setProductsData] = useState<ProductsDataInterface[]>([]);
-  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+
   const [page, setPage] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
@@ -79,12 +79,12 @@ const HomePage = () => {
     setSearchParams({ pageNumber }, { replace: true });
   };
 
-  let searchResult: ProductsDataInterface[] | string[] | null | undefined;
+  let searchResult: ProductsDataInterface[] | undefined;
 
   if (searchQuery) {
     searchResult = productsData.filter((product) => product.id == +searchQuery);
   }
-
+  console.log(page);
   return (
     <main>
       <p>Hello Stranger!</p>
