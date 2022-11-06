@@ -1,8 +1,5 @@
-/* eslint-disable react/prop-types */
-
 import LinearProgress from '@mui/material/LinearProgress';
 import Paper from '@mui/material/Paper';
-import PropTypes from 'prop-types';
 import Table from '@mui/material/Table';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
@@ -13,6 +10,7 @@ import { TableHead } from '@mui/material';
 
 import SearchBar from '../../Atoms/SearchBar/SearchBar';
 import TableBodyProducts from './TableBodyProducts';
+import { TableProductsInterface } from '../../../interfaces';
 
 const TableProducts = ({
   productsData,
@@ -25,7 +23,7 @@ const TableProducts = ({
   emptyRows,
   handleChangePage,
   disabled,
-}) => {
+}: TableProductsInterface) => {
   return (
     <>
       {isPending && (
@@ -112,16 +110,4 @@ const TableProducts = ({
   );
 };
 
-TableProducts.propTypes = {
-  productsData: PropTypes.array,
-  page: PropTypes.number,
-  rowsPerPage: PropTypes.number,
-  searchQuery: PropTypes.string,
-  isPending: PropTypes.bool,
-  searchChangeHandler: PropTypes.func,
-  searchResult: PropTypes.array,
-  emptyRows: PropTypes.number,
-  handleChangePage: PropTypes.func,
-  disabled: PropTypes.bool,
-};
 export default TableProducts;

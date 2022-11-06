@@ -1,5 +1,6 @@
-import PropTypes from 'prop-types';
 import { TableBody, TableCell, TableRow } from '@mui/material';
+
+import { TableBodyProductsInterface } from '../../../interfaces';
 
 const TableBodyProducts = ({
   rowsPerPage,
@@ -8,7 +9,7 @@ const TableBodyProducts = ({
   page,
   searchResult,
   emptyRows,
-}) => {
+}: TableBodyProductsInterface) => {
   return (
     <TableBody sx={{ backgroundColor: 'wheat' }}>
       {(rowsPerPage && !searchQuery
@@ -42,12 +43,4 @@ const TableBodyProducts = ({
   );
 };
 
-TableBodyProducts.propTypes = {
-  rowsPerPage: PropTypes.number,
-  searchQuery: PropTypes.string,
-  productsData: PropTypes.array,
-  page: PropTypes.number,
-  searchResult: PropTypes.array,
-  emptyRows: PropTypes.number,
-};
 export default TableBodyProducts;
