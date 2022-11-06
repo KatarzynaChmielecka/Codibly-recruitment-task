@@ -1,8 +1,9 @@
-import PropTypes from 'prop-types';
 import { TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-const SearchBar = ({ value, onChange }) => {
+import { SearchBarInterface } from '../../../interfaces';
+
+const SearchBar = ({ value, onChange }: SearchBarInterface) => {
   const navigate = useNavigate();
   return (
     <TextField
@@ -22,11 +23,6 @@ const SearchBar = ({ value, onChange }) => {
       sx={{ marginBottom: '3.3125rem', width: '100%' }}
     />
   );
-};
-
-SearchBar.propTypes = {
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  onChange: PropTypes.func,
 };
 
 export default SearchBar;

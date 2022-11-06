@@ -4,28 +4,22 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import TableProducts from '../organisms/TableProducts/TableProducts';
+import { ProductsDataInterface } from '../../interfaces';
 
-export interface ProductsDataInterface {
-  id: number;
-  name: string;
-  year: number;
-  color: string;
-  setSearchParams: object;
-  searchParams: string | object;
-}
 const HomePage = () => {
   const [isPending, setIsPending] = useState(true);
   const [productsData, setProductsData] = useState<ProductsDataInterface[]>([]);
-
-  const [page, setPage] = useState(0);
+  const page = useState(0);
+  const setPage = page[1];
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchParams, setSearchParams] = useSearchParams();
-  // URLSearchParams
+  const searchParams = useSearchParams();
+  const setSearchParams = searchParams[1];
+
   const navigate = useNavigate();
   const rowsPerPage = 5;
   const disabled = true;
   const params = new URLSearchParams(document.location.search);
-  const pageNumberParams = parseInt(params.get('pageNumber') as string);
+  const pageNumberParams = +(params.get('pageNumber') as string);
   useEffect(() => {
     async function fetchProductsData() {
       try {
@@ -65,26 +59,26 @@ const HomePage = () => {
   };
 
   const emptyRows =
-    pageNumberParams >= 0
+    pageNumberParams > 0
       ? Math.max(0, (1 + pageNumberParams) * rowsPerPage - productsData.length)
       : 0;
 
   const handleChangePage = (
-    event: { preventDefault: () => void },
-    pageNumber: string,
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+    pageNumber: number,
   ) => {
-    event.preventDefault();
+    event?.preventDefault();
 
     setPage(pageNumberParams);
-    setSearchParams({ pageNumber }, { replace: true });
+    setSearchParams({ pageNumber: pageNumber.toString() }, { replace: true });
   };
 
-  let searchResult: ProductsDataInterface[] | undefined;
+  let searchResult: ProductsDataInterface[] = [];
 
   if (searchQuery) {
     searchResult = productsData.filter((product) => product.id == +searchQuery);
   }
-  console.log(page);
+
   return (
     <main>
       <p>Hello Stranger!</p>
@@ -108,8 +102,6 @@ const HomePage = () => {
               emptyRows={emptyRows}
               handleChangePage={handleChangePage}
               disabled={disabled}
-              // sx={undefined}
-              // searchParams={searchParams}
             />
             <Typography
               sx={{
@@ -117,10 +109,6 @@ const HomePage = () => {
               }}
             >
               Results: {searchResult?.length}
-            </Typography>
-            <Typography>
-              You choose product with id {searchParams.get('query')}. Maybe you
-              want to check something else?
             </Typography>
           </>
         )
@@ -136,7 +124,6 @@ const HomePage = () => {
           emptyRows={emptyRows}
           handleChangePage={handleChangePage}
           disabled={disabled}
-          // searchParams={searchParams}
         />
       )}
     </main>
