@@ -38,6 +38,7 @@ List of products from api
 
 ### Built with
 - react
+- typescript
 - react router
 - mui
 - eslint
@@ -51,7 +52,6 @@ List of products from api
 Ideas for future:
 - add search query  reflected in the url
 - add redux
-- add typescript
 - add more tests
 
 
